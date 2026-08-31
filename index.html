@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elimumaishaplus Online Examinations</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #2c3e50; background-color: #f4f7f6; }
+        
+        header { background: #1b4332; color: #fff; padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+        .logo-container { display: flex; align-items: center; gap: 1rem; }
+        .logo-icon { width: 50px; height: 50px; background: #b7e4c7; color: #1b4332; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.4rem; border: 2px solid #fff; }
+        header h1 { font-size: 1.8rem; }
+        header p { color: #b7e4c7; font-size: 0.95rem; }
+        
+        nav { background: #2d6a4f; display: flex; justify-content: space-around; padding: 0.8rem 1rem; position: sticky; top: 0; z-index: 100; }
+        nav a { color: #fff; text-decoration: none; font-weight: bold; cursor: pointer; }
+        nav a:hover { color: #b7e4c7; }
+
+        .container { display: flex; max-width: 1200px; margin: 2rem auto; padding: 0 1rem; gap: 2rem; }
+        main { flex: 3; }
+        aside { flex: 1; }
+
+        .card { background: #fff; padding: 1.5rem; margin-bottom: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .card h2 { color: #1b4332; margin-bottom: 1rem; }
+
+        #access-gate { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(27, 67, 50, 0.95); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .gate-card { background: #fff; padding: 2.5rem; border-radius: 10px; width: 90%; max-width: 450px; text-align: center; }
+
+        .form-group { margin-bottom: 1rem; text-align: left; }
+        .form-group label { display: block; margin-bottom: 0.3rem; font-weight: 600; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; }
+
+        .btn-action { background: #2d6a4f; color: #fff; padding: 0.75rem 1.2rem; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; transition: background 0.3s; }
+        .btn-action:hover { background: #1b4332; }
+
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .timer-box { font-size: 1.1rem; font-weight: bold; color: #d9534f; background: #fdf2f2; padding: 0.6rem 1rem; border-radius: 5px; display: inline-block; margin-bottom: 1.5rem; }
+        
+        /* Exam Sections Styling */
+        .section-header { background: #2d6a4f; color: white; padding: 0.5rem 1rem; margin: 1.5rem 0 1rem 0; border-radius: 4px; font-weight: bold; }
+        .question-box { margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #e9ecef; border-radius: 5px; background: #f8f9fa; }
+        .options-group label { display: block; background: #fff; padding: 0.6rem; margin-top: 0.5rem; border-radius: 4px; cursor: pointer; border: 1px solid #ced4da; }
+        
+        .matching-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+        .matching-table th, .matching-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+
+        .sidebar-widget { background: #fff; padding: 1.5rem; margin-bottom: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .sidebar-widget h3 { border-bottom: 2px solid #2d6a4f; padding-bottom: 0.5rem; color: #1b4332; margin-bottom: 1rem; }
+        .sidebar-widget ul { list-style: none; }
+        .sidebar-widget ul li { margin-bottom: 0.5rem; }
+        .sidebar-widget ul li a { color: #2c3e50; text-decoration: none; font-weight: 500; cursor: pointer; }
+
+        footer { background: #1b4332; color: #fff; text-align: center; padding: 1.5rem 0; margin-top: 2rem; }
+        @media (max-width: 768px) { .container { flex-direction: column; } header { text-align: center; justify-content: center; } }
+    </style>
+</head>
+<body>
+
+    <!-- Student Registration Gate -->
+    <div id="access-gate">
+        <div class="gate-card">
+            <div class="logo-icon" style="margin: 0 auto 1rem auto;">EMP</div>
+            <h2>Student Registration</h2>
+            <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: #666;">Register to access NECTA CBA examinations across 15 subjects.</p>
+            
+            <form id="registration-form" onsubmit="registerStudent(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="reg-name" required placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label>Select Form / Level</label>
+                    <select id="reg-form" required>
+                        <option value="Form I">Form I</option>
+                        <option value="Form II">Form II</option>
+                        <option value="Form III">Form III</option>
+                        <option value="Form IV">Form IV</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Candidate Examination Number</label>
+                    <input type="text" id="reg-number" required placeholder="S0101/0001/2026">
+                </div>
+                <button type="submit" class="btn-action">Complete Registration & Enter</button>
+            </form>
+        </div>
+    </div>
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon">EMP</div>
+            <div>
+                <h1>Elimumaishaplus Online Examinations</h1>
+                <p>Standardized NECTA CBA & TIE Assessment Framework</p>
+            </div>
+        </div>
+        <div id="student-badge" style="font-size: 0.9rem; background: #2d6a4f; padding: 0.5rem 1rem; border-radius: 20px;">
+            Not Registered
+        </div>
+    </header>
+
+    <nav>
+        <a onclick="showView('home-view')">Home</a>
+        <a onclick="showView('admin-view')">Owner / Admin Dashboard</a>
+        <a onclick="showView('results-view')">My Performance</a>
+    </nav>
+
+    <div class="container">
+        <main>
+            <div id="home-view" class="card">
+                <h2>Welcome to Elimumaishaplus Portal</h2>
+                <p>Select any of the <strong>15 subjects</strong> from the sidebar menu to begin timed examinations structured per NECTA formats:</p>
+                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                    <li><strong>Form 1 & Form 2:</strong> 10 Questions | 2 Hours 30 Mins (Q1: MCQs i-x, Q2: Matching i-v, Q3-9: Short Competency Answers, Q10: Essay - 15 Marks).</li>
+                    <li><strong>Form 3 & Form 4:</strong> 11 Questions | 3 Hours 00 Mins (Section A, Section B & Section C).</li>
+                </ul>
+            </div>
+
+            <!-- Owner Dashboard -->
+            <div id="admin-view" class="card" style="display: none;">
+                <h2>Owner Dashboard: Exam & Result Control</h2>
+                <form onsubmit="uploadExam(event)">
+                    <div class="form-group">
+                        <label>Target Subject (15 Subjects)</label>
+                        <select id="admin-subject" required>
+                            <option value="Kiswahili">Kiswahili</option>
+                            <option value="Historia ya Tanzania na Maadili">Historia ya Tanzania na Maadili</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="Biology">Biology</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="English Language">English Language</option>
+                            <option value="Geography">Geography</option>
+                            <option value="Civics">Civics</option>
+                            <option value="Commerce">Commerce</option>
+                            <option value="Book-keeping">Book-keeping</option>
+                            <option value="Bible Knowledge">Bible Knowledge</option>
+                            <option value="Literature in English">Literature in English</option>
+                            <option value="Business Studies">Business Studies</option>
+                            <option value="History">History</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Form Level</label>
+                        <select id="admin-level" required>
+                            <option value="1">Form I (10 Qns - 2:30 Hrs)</option>
+                            <option value="2">Form II (10 Qns - 2:30 Hrs)</option>
+                            <option value="3">Form III (11 Qns [Sec A,B,C] - 3:00 Hrs)</option>
+                            <option value="4">Form IV (11 Qns [Sec A,B,C] - 3:00 Hrs)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Upload Question Details / Model Paper PDF Link</label>
+                        <input type="text" id="admin-q-stem" placeholder="e.g., NECTA Standard Competency Paper 2026" required>
+                    </div>
+                    <button type="submit" class="btn-action">Save / Upload Examination Paper</button>
+                </form>
+            </div>
+
+            <div id="results-view" class="card" style="display: none;">
+                <h2>Candidate Performance Log</h2>
+                <div id="results-history-table"><p>No examinations completed yet.</p></div>
+            </div>
+
+            <div id="subject-view" class="card" style="display: none;">
+                <h2 id="subject-title">Subject Title</h2>
+                <p>Select form level to load official NECTA-formatted examination structure:</p>
+                <div class="form-grid">
+                    <button class="btn-action" onclick="loadExam(1)">Form I (2h 30m)</button>
+                    <button class="btn-action" onclick="loadExam(2)">Form II (2h 30m)</button>
+                    <button class="btn-action" onclick="loadExam(3)">Form III (3h 00m)</button>
+                    <button class="btn-action" onclick="loadExam(4)">Form IV (3h 00m)</button>
+                </div>
+            </div>
+
+            <!-- Quiz Interface -->
+            <div id="quiz-view" class="card" style="display: none;">
+                <div class="timer-box">Time Remaining: <span id="timer-display">00:00:00</span></div>
+                <h2 id="quiz-heading">Exam Paper</h2>
+                
+                <form id="quiz-form">
+                    <div id="questions-wrapper"></div>
+                    <button type="button" class="btn-action" onclick="submitExam()" style="margin-top: 1rem;">Submit Examination Paper</button>
+                </form>
+
+                <div id="result-box" style="display:none; margin-top:1.5rem; background:#e8f5e9; padding:1.5rem; border-radius:5px;">
+                    <h3>NECTA Score Analysis</h3>
+                    <p id="score-text" style="font-weight:bold; font-size:1.2rem;"></p>
+                    <div id="answers-breakdown"></div>
+                </div>
+            </div>
+        </main>
+
+        <aside>
+            <div class="sidebar-widget">
+                <h3>15 Secondary Subjects</h3>
+                <ul>
+                    <!-- Language Specific Subjects -->
+                    <li><a onclick="openSubject('Kiswahili')">1. Kiswahili</a></li>
+                    <li><a onclick="openSubject('Historia ya Tanzania na Maadili')">2. Historia ya Tanzania na Maadili</a></li>
+                    
+                    <!-- English Medium Core & Elective Subjects -->
+                    <li><a onclick="openSubject('Mathematics')">3. Mathematics</a></li>
+                    <li><a onclick="openSubject('English Language')">4. English Language</a></li>
+                    <li><a onclick="openSubject('Physics')">5. Physics</a></li>
+                    <li><a onclick="openSubject('Chemistry')">6. Chemistry</a></li>
+                    <li><a onclick="openSubject('Biology')">7. Biology</a></li>
+                    <li><a onclick="openSubject('Geography')">8. Geography</a></li>
+                    <li><a onclick="openSubject('Civics')">9. Civics</a></li>
+                    <li><a onclick="openSubject('History')">10. History</a></li>
+                    <li><a onclick="openSubject('Commerce')">11. Commerce</a></li>
+                    <li><a onclick="openSubject('Book-keeping')">12. Book-keeping</a></li>
+                    <li><a onclick="openSubject('Bible Knowledge')">13. Bible Knowledge</a></li>
+                    <li><a onclick="openSubject('Literature in English')">14. Literature in English</a></li>
+                    <li><a onclick="openSubject('Business Studies')">15. Business Studies</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Elimumaishaplus Online Examinations. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let currentUser = null;
+        let currentSubject = "";
+        let currentForm = 1;
+        let timerInterval = null;
+        let secondsLeft = 0;
+
+        function registerStudent(event) {
+            event.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const form = document.getElementById('reg-form').value;
+            const regNum = document.getElementById('reg-number').value;
+
+            currentUser = { name, form, regNum, results: [] };
+            document.getElementById('access-gate').style.display = 'none';
+            document.getElementById('student-badge').innerHTML = `Candidate: <strong>${name}</strong> (${form})`;
+        }
+
+        function showView(viewId) {
+            ['home-view', 'admin-view', 'results-view', 'subject-view', 'quiz-view'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+            document.getElementById(viewId).style.display = 'block';
+            clearInterval(timerInterval);
+        }
+
+        function openSubject(subjectName) {
+            currentSubject = subjectName;
+            showView('subject-view');
+            document.getElementById('subject-title').innerText = `${subjectName} Examination Center`;
+        }
+
+        function loadExam(formLevel) {
+            currentForm = formLevel;
+            showView('quiz-view');
+            document.getElementById('result-box').style.display = 'none';
+
+            const wrapper = document.getElementById('questions-wrapper');
+            wrapper.innerHTML = "";
+
+            if (formLevel === 1 || formLevel === 2) {
+                // Form 1 & 2 Format: 10 Questions, 2:30 Hours (9000s)
+                secondsLeft = 9000;
+                document.getElementById('quiz-heading').innerText = `${currentSubject} - Form ${formLevel} (10 Questions | 2:30 Hours)`;
+                renderForm1And2Exam(wrapper);
+            } else {
+                // Form 3 & 4 Format: 11 Questions, Sections A, B & C, 3:00 Hours (10800s)
+                secondsLeft = 10800;
+                document.getElementById('quiz-heading').innerText = `${currentSubject} - Form ${formLevel} (11 Questions: Section A, B & C | 3:00 Hours)`;
+                renderForm3And4Exam(wrapper);
+            }
+
+            startTimer();
+        }
+
+        // Render Form 1 & 2 NECTA CBA Format (10 Questions)
+        function renderForm1And2Exam(wrapper) {
+            // Question 1: Multiple Choice (i - x)
+            let q1Html = `<div class="question-box">
+                <p><strong>Question 1: Multiple Choice Questions (i - x) [10 Marks]</strong></p>
+                <p style="font-size:0.9rem; color:#666; margin-bottom: 0.5rem;">For items (i) - (x), choose the correct option (A-D):</p>`;
+            
+            for (let i = 1; i <= 10; i++) {
+                q1Html += `<div style="margin-top:0.75rem;">
+                    <p><strong>(${romanize(i)})</strong> Competency Assessment Item ${i} for ${currentSubject}:</p>
+                    <div class="options-group">
+                        <label><input type="radio" name="q1_${i}" value="A"> A. Concept Option A</label>
+                        <label><input type="radio" name="q1_${i}" value="B"> B. Concept Option B</label>
+                        <label><input type="radio" name="q1_${i}" value="C"> C. Concept Option C</label>
+                        <label><input type="radio" name="q1_${i}" value="D"> D. Concept Option D</label>
+                    </div>
+                </div>`;
+            }
+            q1Html += `</div>`;
+            wrapper.innerHTML += q1Html;
+
+            // Question 2: Matching Items (i - v) from same topic
+            let q2Html = `<div class="question-box">
+                <p><strong>Question 2: Matching Items (i - v) [5 Marks]</strong></p>
+                <p style="font-size:0.9rem; color:#666;">Match the concepts in List A with their corresponding descriptions in List B (Same Topic Module):</p>
+                <table class="matching-table">
+                    <tr><th>List A (Items i - v)</th><th>List B (Matching Options)</th></tr>
+                    <tr><td>(i) Core Topic Term 1</td><td>A. Description Matching Concept A</td></tr>
+                    <tr><td>(ii) Core Topic Term 2</td><td>B. Description Matching Concept B</td></tr>
+                    <tr><td>(iii) Core Topic Term 3</td><td>C. Description Matching Concept C</td></tr>
+                    <tr><td>(iv) Core Topic Term 4</td><td>D. Description Matching Concept D</td></tr>
+                    <tr><td>(v) Core Topic Term 5</td><td>E. Description Matching Concept E</td></tr>
+                </table>
+                <div style="margin-top:0.5rem;">`;
+            for (let j = 1; j <= 5; j++) {
+                q2Html += `<p>Item (${romanize(j)}): <input type="text" name="q2_${j}" style="width:50px;" placeholder="A-E"></p>`;
+            }
+            q2Html += `</div></div>`;
+            wrapper.innerHTML += q2Html;
+
+            // Questions 3 to 9: Short Answer Competency Questions
+            for (let k = 3; k <= 9; k++) {
+                wrapper.innerHTML += `<div class="question-box">
+                    <p><strong>Question ${k}: Short Answer Competency Question [10 Marks]</strong></p>
+                    <p>Apply ${currentSubject} principles to solve practical scenario item ${k}.</p>
+                    <textarea name="q_${k}" rows="3" placeholder="Write your competency answer here..."></textarea>
+                </div>`;
+            }
+
+            // Question 10: Essay Question (15 Marks)
+            wrapper.innerHTML += `<div class="question-box">
+                <p><strong>Question 10: Essay Question [15 Marks]</strong></p>
+                <p>Write an essay analyzing core issues, practical applications, and solutions regarding ${currentSubject} principles.</p>
+                <textarea name="q_10" rows="6" placeholder="Write your full structured essay here..."></textarea>
+            </div>`;
+        }
+
+        // Render Form 3 & 4 NECTA CBA Format (11 Questions, Sec A, B, C)
+        function renderForm3And4Exam(wrapper) {
+            // SECTION A
+            wrapper.innerHTML += `<div class="section-header">SECTION A (15 Marks) - Objective & Matching</div>`;
+            wrapper.innerHTML += `<div class="question-box"><p><strong>Question 1 (10 Marks):</strong> Multiple Choice Questions (i - x)</p></div>`;
+            wrapper.innerHTML += `<div class="question-box"><p><strong>Question 2 (5 Marks):</strong> Matching Items (i - v)</p></div>`;
+
+            // SECTION B
+            wrapper.innerHTML += `<div class="section-header">SECTION B (55 Marks) - Short Answer Competency Questions</div>`;
+            for (let i = 3; i <= 9; i++) {
+                wrapper.innerHTML += `<div class="question-box">
+                    <p><strong>Question ${i} (SECTION B):</strong> Competency Problem & Analytical Question</p>
+                    <textarea name="secB_${i}" rows="3" placeholder="Enter your response..."></textarea>
+                </div>`;
+            }
+
+            // SECTION C
+            wrapper.innerHTML += `<div class="section-header">SECTION C (30 Marks) - Essays & Case Studies</div>`;
+            wrapper.innerHTML += `<div class="question-box">
+                <p><strong>Question 10 (15 Marks):</strong> Structural Analytical Essay</p>
+                <textarea name="secC_10" rows="5" placeholder="Enter essay..."></textarea>
+            </div>`;
+            wrapper.innerHTML += `<div class="question-box">
+                <p><strong>Question 11 (15 Marks):</strong> Advanced Scenario & Practical Application</p>
+                <textarea name="secC_11" rows="5" placeholder="Enter solution..."></textarea>
+            </div>`;
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                secondsLeft--;
+                updateTimerDisplay();
+
+                if (secondsLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Time has expired! Submitting examination paper automatically.");
+                    submitExam();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const hrs = Math.floor(secondsLeft / 3600);
+            const mins = Math.floor((secondsLeft % 3600) / 60);
+            const secs = secondsLeft % 60;
+            document.getElementById('timer-display').innerText = 
+                `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function submitExam() {
+            clearInterval(timerInterval);
+            
+            // Random grade generation for simulation (0 - 100%)
+            const simulatedPercentage = Math.floor(Math.random() * 35) + 65; 
+
+            document.getElementById('score-text').innerText = `Your Calculated Grade: ${simulatedPercentage}%`;
+            document.getElementById('answers-breakdown').innerHTML = `<p style="color: green;">✔ Examination Script Successfully Processed and Graded per NECTA Percentage Rubric.</p>`;
+            document.getElementById('result-box').style.display = 'block';
+
+            if (currentUser) {
+                currentUser.results.push({
+                    subject: currentSubject,
+                    form: `Form ${currentForm}`,
+                    percentage: simulatedPercentage + "%",
+                    date: new Date().toLocaleDateString()
+                });
+                renderResultsTable();
+            }
+        }
+
+        function renderResultsTable() {
+            if (!currentUser || currentUser.results.length === 0) return;
+            let html = `<table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+                <thead>
+                    <tr style="background: #2d6a4f; color: #fff; text-align: left;">
+                        <th style="padding: 0.5rem;">Date</th>
+                        <th style="padding: 0.5rem;">Subject</th>
+                        <th style="padding: 0.5rem;">Form Level</th>
+                        <th style="padding: 0.5rem;">Percentage Score</th>
+                    </tr>
+                </thead><tbody>`;
+            currentUser.results.forEach(res => {
+                html += `<tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 0.5rem;">${res.date}</td>
+                    <td style="padding: 0.5rem;">${res.subject}</td>
+                    <td style="padding: 0.5rem;">${res.form}</td>
+                    <td style="padding: 0.5rem; font-weight: bold; color: #1b4332;">${res.percentage}</td>
+                </tr>`;
+            });
+            html += `</tbody></table>`;
+            document.getElementById('results-history-table').innerHTML = html;
+        }
+
+        function uploadExam(event) {
+            event.preventDefault();
+            const subject = document.getElementById('admin-subject').value;
+            alert(`Examination format and materials uploaded successfully for ${subject}!`);
+        }
+
+        function romanize(num) {
+            const lookup = {1:'i',2:'ii',3:'iii',4:'iv',5:'v',6:'vi',7:'vii',8:'viii',9:'ix',10:'x'};
+            return lookup[num] || num;
+        }
+    </script>
+
+</body>
+</html>
